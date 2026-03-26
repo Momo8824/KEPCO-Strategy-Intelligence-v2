@@ -1,0 +1,217 @@
+# RSS 수집 소스 목록 및 키워드 필터 설정
+# KEPCO E&C 전략 인텔리전스 시스템 v2.0
+
+sources:
+  # ──────────────────────────────────────────────
+  # 글로벌 — 원전 / 에너지 전문 RSS
+  # ──────────────────────────────────────────────
+  - name: "World Nuclear News"
+    url: "https://world-nuclear-news.org/rss"
+    category: "global_nuclear"
+    language: "en"
+    enabled: true
+
+  - name: "IAEA Top Stories"
+    url: "https://www.iaea.org/feeds/topnews"
+    category: "global_nuclear"
+    language: "en"
+    enabled: true
+
+  - name: "NEI Magazine"
+    url: "http://neimagazine.com/rss"
+    category: "global_nuclear"
+    language: "en"
+    enabled: true
+
+  - name: "US NRC (Nuclear Regulatory Commission)"
+    url: "https://www.nrc.gov/reading-rm/doc-collections/news/news.xml"
+    category: "global_nuclear"
+    language: "en"
+    enabled: false  # 접속 차단(Timeout/404)으로 임시 비활성화
+
+  - name: "ANS Nuclear Newswire"
+    url: "https://www.ans.org/news/"
+    category: "global_nuclear"
+    language: "en"
+    enabled: true
+
+  - name: "Energy Intelligence"
+    url: "https://www.energyintel.com/rss-feed.rss"
+    category: "global_energy"
+    language: "en"
+    enabled: true
+
+  - name: "Power Magazine"
+    url: "http://powermag.com/rss"
+    category: "global_energy"
+    language: "en"
+    enabled: true
+
+  - name: "Offshore Energy"
+    url: "http://offshore-energy.biz/rss"
+    category: "global_energy"
+    language: "en"
+    enabled: true
+
+  # ──────────────────────────────────────────────
+  # 글로벌 — 금융 / 건설 / 종합
+  # ──────────────────────────────────────────────
+  - name: "Financial Times Energy"
+    url: "https://www.ft.com/energy?format=rss"
+    category: "global_finance"
+    language: "en"
+    enabled: true
+
+  - name: "Global Construction Review"
+    url: "http://globalconstructionreview.com/rss"
+    category: "global_construction"
+    language: "en"
+    enabled: true
+
+  - name: "Construction Dive"
+    url: "https://www.constructiondive.com/feeds/news/"
+    category: "global_construction"
+    language: "en"
+    enabled: true
+
+  # ──────────────────────────────────────────────
+  # 국내 — 규제 / 입법 / 전문지
+  # ──────────────────────────────────────────────
+  - name: "원자력안전위원회"
+    url: "https://www.nssc.go.kr/ko/cms/FR_CON/index.do?MENU_ID=190"
+    category: "domestic_regulation"
+    language: "ko"
+    enabled: true
+
+  - name: "국회 의안정보시스템"
+    url: "https://assembly.go.kr/portal/rss/rss/meopenRss.do?brd_sctn=C2"
+    category: "domestic_policy"
+    language: "ko"
+    enabled: true
+
+  - name: "에너지경제신문 원자력섹션"
+    url: "https://ekn.kr/web/section.php?ncid=N01&ncid2=N15"
+    category: "domestic_media"
+    language: "ko"
+    enabled: true
+
+# ──────────────────────────────────────────────
+# X(트위터) 계정 모니터링 (RSS 미지원 — 별도 스크래핑)
+# ──────────────────────────────────────────────
+x_accounts:
+  - handle: "iea"
+    url: "https://x.com/iea"
+    description: "국제에너지기구(IEA) 공식"
+    enabled: false  # X API 키 필요 시 true로 변경
+
+  - handle: "W_Nuclear_News"
+    url: "https://x.com/W_Nuclear_News"
+    description: "World Nuclear News 공식"
+    enabled: false
+
+  - handle: "WorldNuclear"
+    url: "https://x.com/WorldNuclear"
+    description: "World Nuclear Association"
+    enabled: false
+
+  - handle: "energy"
+    url: "https://x.com/energy"
+    description: "미국 에너지부(DOE)"
+    enabled: false
+
+  - handle: "motirnews"
+    url: "https://x.com/motirnews"
+    description: "산업통상자원부"
+    enabled: false
+
+  - handle: "mceekorea"
+    url: "https://x.com/mceekorea/"
+    description: "한국MCE/에너지"
+    enabled: false
+
+# ──────────────────────────────────────────────
+# 키워드 필터 설정
+# ──────────────────────────────────────────────
+keywords:
+  must_include:  # 이 중 하나 이상 포함 시 통과
+    - "nuclear"
+    - "원전"
+    - "SMR"
+    - "소형모듈"
+    - "KEPCO"
+    - "한국전력기술"
+    - "원자력"
+    - "atom"
+    - "reactor"
+    - "APR1400"
+    - "APR1000"
+    - "i-SMR"
+    - "방사성"
+    - "energy"
+    - "에너지"
+    - "탄소중립"
+    - "CBAM"
+    - "RE100"
+    - "해상풍력"
+    - "수소"
+    - "EPC"
+    - "플랜트"
+    - "엔지니어링"
+    - "체코"
+    - "폴란드"
+    - "UAE"
+    - "Westinghouse"
+    - "Barakah"
+    - "원전 수출"
+    - "소형모듈원자로"
+    - "수소 에너지"
+    - "엔지니어링 DX"
+    - "원자력 발전"
+    - "nuclear EPC"
+    - "nuclear supply chain"
+    - "nuclear construction cost"
+    - "carbon neutrality"
+    - "hydrogen energy"
+    - "offshore wind"
+    - "energy transition"
+    - "ESS"
+    - "BIM engineering"
+    - "Digital twin"
+    - "Engineering DX"
+    - "AI engineering"
+    - "전력수급기본계획"
+    - "공공기관 경영평가"
+    - "탄소국경조정"
+    - "원자력진흥법"
+    - "EU Taxonomy"
+    - "Nuclear financing"
+    - "SMR licensing policy"
+    - "SMR regulation"
+    - "IAEA"
+    - "nuclear export control"
+    - "한전KPS"
+    - "한국수력원자력"
+    - "GE Hitachi"
+    - "EDF"
+    - "Rosatom"
+    - "CNNC"
+    - "두산에너빌리티"
+    - "KHNP"
+    - "Doosan Enerbility"
+    - "사우디 원전"
+    - "터키 원전"
+    - "인도네시아 SMR"
+    - "베트남 원전"
+
+  exclude:  # 이 키워드 포함 시 제외 (스팸/무관)
+    - "광고"
+    - "sponsored"
+    - "advertisement"
+
+# 수집 설정
+collection:
+  max_articles_per_source: 20    # 소스당 최대 수집 기사 수
+  max_age_hours: 24              # 최대 24시간 이내 기사만 수집
+  request_timeout_seconds: 10
+  retry_count: 3
+  user_agent: "KEPCO-E&C-StrategyBot/2.0 (contact: strategy@kepco-enc.com)"
