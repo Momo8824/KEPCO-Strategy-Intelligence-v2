@@ -48,7 +48,7 @@ class AnalyzerAgent:
         self.analyst1_prompt = _load_prompt("02_analyst1_strategy.md")
         self.analyst2_prompt = _load_prompt("03_analyst2_industry.md")
 
-    def _call_openai(self, system_prompt: str, user_content: str) -> str:
+    def _call_openai(self, system_prompt: str, user_content: str, temperature: float = 0.3) -> str:
         """OpenAI API 호출 (재시도 포함)"""
         for attempt in range(1, self.RETRY_COUNT + 1):
             try:
@@ -58,7 +58,7 @@ class AnalyzerAgent:
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_content}
                     ],
-                    temperature=0.3
+                    temperature=temperature
                 )
                 return response.choices[0].message.content
             except Exception as e:
@@ -83,7 +83,7 @@ class AnalyzerAgent:
         )
 
         logger.info("Analyst 1: 핵심 기사 선별 중...")
-        response_text = self._call_openai(self.analyst1_prompt, user_content)
+        response_text = self._call_openai(self.analyst1_prompt, user_content, temperature=0.1)
         logger.debug(f"Analyst 1 응답:\n{response_text[:500]}")
 
         url_to_article = {a.url: a for a in articles}
@@ -119,19 +119,26 @@ class AnalyzerAgent:
             f"출처: {article.source_name}\n"
             f"URL: {article.url}\n"
             f"원문 요약: {article.summary}\n\n"
-            f"다음을 JSON 형식으로만 작성하세요 (다른 텍스트 금지):\n"
+            f"다음을 참고하여 심층 추론 후, 마지막에 JSON 형식으로 작성하세요:\n"
             f'{{"summary": "3문장 이내 한국어 요약", '
-            f'"opportunity": "KEPCO E&C 기회 요인 1~2문장", '
-            f'"threat": "KEPCO E&C 위협 요인 1~2문장", '
-            f'"action_point": "구체적 Action Point 1가지 (담당부서+행동+기한)"}}'
+            f'"opportunity": "KEPCO E&C 기회 요인 (구체적인 근거 포함 3~4문장)", '
+            f'"threat": "KEPCO E&C 위협 요인 (구체적인 근거 포함 3~4문장)", '
+            f'"action_point": "[담당부서명] 실행 가능한 Action Point 1가지"}}'
         )
 
-        logger.info(f"Analyst 2: 분석 중 — {article.title[:50]}...")
-        response_text = self._call_openai(self.analyst2_prompt, user_content)
+        logger.info(f"Analyst 2: 깊은 사고 과정(CoT) 분석 중 — {article.title[:50]}...")
+        response_text = self._call_openai(self.analyst2_prompt, user_content, temperature=0.4)
 
         try:
-            cleaned = response_text.strip().replace("```json", "").replace("```", "").strip()
-            data = json.loads(cleaned)
+            import re
+            match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', response_text, re.DOTALL)
+            if match:
+                json_str = match.group(1)
+            else:
+                match = re.search(r'\{.*?\}', response_text, re.DOTALL)
+                json_str = match.group(0) if match else response_text
+
+            data = json.loads(json_str)
             article.summary = data.get("summary", article.summary)
             article.opportunity = data.get("opportunity", "")
             article.threat = data.get("threat", "")
@@ -139,7 +146,7 @@ class AnalyzerAgent:
         except json.JSONDecodeError:
             logger.warning(f"JSON 파싱 실패 — 원문 저장: {article.title[:40]}")
             article.summary = response_text[:400]
-
+            
         return article
 
     def run(self, articles: list[Article]) -> list[Article]:
